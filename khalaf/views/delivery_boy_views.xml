@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Delivery Boy List View -->
+    <record id="view_delivery_boy_tree" model="ir.ui.view">
+        <field name="name">stock.delivery.boy.tree</field>
+        <field name="model">stock.delivery.boy</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="status"/>
+                <field name="total_cash"/>
+                <field name="total_visa"/>
+                <field name="total_amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Delivery Boy Form View -->
+    <record id="view_delivery_boy_form" model="ir.ui.view">
+        <field name="name">stock.delivery.boy.form</field>
+        <field name="model">stock.delivery.boy</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="status"/>
+                    </group>
+                    <group string="Collections">
+                        <field name="total_cash" readonly="1"/>
+                        <field name="total_visa" readonly="1"/>
+                        <field name="total_amount" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Delivery Orders">
+                            <field name="delivery_order_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="state"/>
+<!--                                    <field name="amount_total"/>-->
+<!--                                    <field name="payment_method"/>-->
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action and Menu -->
+    <record id="action_delivery_boy" model="ir.actions.act_window">
+        <field name="name">Delivery Boys</field>
+        <field name="res_model">stock.delivery.boy</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_delivery_boy_root" name="Delivery Management" sequence="10"/>
+    <menuitem id="menu_delivery_boy" parent="menu_delivery_boy_root" name="Delivery Boys" action="action_delivery_boy" sequence="10"/>
+</odoo>
