@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Report Template -->
+    <template id="report_stock_picking_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="picking">
+                <div style="width: 80mm; font-family: Arial, sans-serif; font-size: 12px; text-align: left;">
+                    <!-- Company Logo -->
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <img t-if="picking.company_id.logo"
+                             t-att-src="'data:image/png;base64,%s' % picking.company_id.logo.decode()"
+                             style="max-width: 100px;"/>
+                    </div>
+
+                    <!-- Order Date and Time -->
+                    <p style="text-align: center;">
+                        <strong>Date:</strong>
+                        <span t-esc="picking.scheduled_date.strftime('%Y-%m-%d')"/>
+                        <br/>
+                        <strong>Time:</strong>
+                        <span t-esc="picking.scheduled_date.strftime('%H:%M:%S')"/>
+                    </p>
+
+                    <!-- Delivery Details -->
+                    <h3 style="text-align: center;">Delivery Receipt</h3>
+                    <p>
+                        <strong>Delivery Boy:</strong>
+                        <span t-field="picking.delivery_boy_id.name"/>
+                    </p>
+                    <p>
+                        <strong>Customer:</strong>
+                        <span t-field="picking.partner_id.name"/>
+                    </p>
+                    <p>
+                        <strong>Address:</strong>
+                        <span t-field="picking.partner_id.contact_address"/>
+                    </p>
+                    <p>
+                        <strong>Phone:</strong>
+                        <span t-field="picking.partner_id.phone or picking.partner_id.mobile"/>
+                    </p>
+
+                    <!-- Items Table -->
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; border-bottom: 1px solid #000;">Item</th>
+                                <th style="text-align: right; border-bottom: 1px solid #000;">Qty</th>
+                                <th style="text-align: right; border-bottom: 1px solid #000;">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="picking.sale_id.order_line" t-as="line">
+                                <td>
+                                    <span t-field="line.product_id.name"/>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span t-field="line.product_uom_qty"/>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span t-field="line.price_unit"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Total -->
+                    <p style="margin-top: 10px; text-align: right;">
+                        <strong>Total:</strong>
+                        <span t-esc="picking.sale_id.amount_total"/>
+                        <span t-field="picking.sale_id.currency_id.symbol"/>
+                    </p>
+
+                    <!-- Payment Method -->
+                    <p>
+                        <strong>Payment Method:</strong>
+                        <span t-field="picking.payment_method"/>
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_stock_picking_receipt_report" model="ir.actions.report">
+        <field name="name">Delivery Receipt</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">khalaf.report_stock_picking_receipt</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+    </record>
+</odoo>
