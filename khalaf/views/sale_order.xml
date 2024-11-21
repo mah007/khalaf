@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="boy_sale_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.orfer.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="payment_method"/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="boy_sale_order_tree_view_inherit" model="ir.ui.view">
+            <field name="name">sale.order.tree.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='activity_ids']" position="after">
+
+                    <field name="collection_status"
+                    decoration-success="collection_status == 'collected'"
+                    decoration-danger="state == 'not_collected'"
+                    widget="badge"
+                    optional="show"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

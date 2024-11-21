@@ -12,10 +12,28 @@ class StockDeliveryBoy(models.Model):
         ('pending', 'Pending'),
         ('in_progress', 'In Progress'),
         ('completed', 'Completed')
-    ], string='Status', compute='_compute_status', store=True)
+    ], string='Status', store=True)
     total_cash = fields.Float(string="Total Cash Collection", compute='_compute_total_collection')
     total_visa = fields.Float(string="Total Visa Collection", compute='_compute_total_collection')
+    total_insta = fields.Float(string="Total InstaPay Collection", compute='_compute_total_collection')
+    total_voda = fields.Float(string="Total Vodafone Collection", compute='_compute_total_collection')
     total_amount = fields.Float(string="Total Amount", compute='_compute_total_collection')
+
+    def done_collection(self):
+        for rec in self:
+            for order in rec.delivery_order_ids:
+                order.sale_id.collection_status = 'collected'
+
+
+    def action_process(self):
+        for rec in self:
+            rec.status = 'in_progress'
+    def action_done(self):
+        for rec in self:
+            rec.status = 'completed'
+            rec.done_collection()
+
+
 
     @api.depends('delivery_order_ids.state')
     def _compute_status(self):
@@ -30,11 +48,15 @@ class StockDeliveryBoy(models.Model):
     @api.depends('delivery_order_ids')
     def _compute_total_collection(self):
         for record in self:
-            cash_total = sum(order.amount_total for order in record.delivery_order_ids if order.payment_method == 'cash')
-            visa_total = sum(order.amount_total for order in record.delivery_order_ids if order.payment_method == 'visa')
+            cash_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'cash')
+            visa_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'visa')
+            insta_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'insta')
+            voda_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'voda')
             record.total_cash = cash_total
             record.total_visa = visa_total
-            record.total_amount = cash_total + visa_total
+            record.total_insta = insta_total
+            record.total_voda = voda_total
+            record.total_amount = cash_total + visa_total + insta_total + voda_total
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
@@ -42,16 +64,58 @@ class StockPicking(models.Model):
     delivery_boy_id = fields.Many2one('stock.delivery.boy', string='Delivery Boy')
     payment_method = fields.Selection([
         ('cash', 'Cash'),
+        ('insta', 'InstaPay'),
+        ('voda', 'Vodafone'),
         ('visa', 'Visa')
-    ], string="Payment Method", help="Indicates if payment was made by cash or visa.")
+    ], string="Payment Method", help="Indicates if payment was made by cash or visa." ,compute='_compute_payment_method')
+    partner_shipping_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Delivery Address info",
+        compute='_compute_partner_shipping_id',
+        store=True, readonly=False, required=True, precompute=True,
+        check_company=True,
+        index='btree_not_null')
+    assigning = fields.Selection([('assigned', 'Assigned'), ('not_assigned', 'Not Assigned')], default='not_assigned', string="Is Assigned" ,compute='_compute_assigning',store=True)
+
+    @api.depends('partner_id')
+    def _compute_partner_shipping_id(self):
+        for order in self:
+            order.partner_shipping_id = order.partner_id.address_get(['delivery'])[
+                'delivery'] if order.partner_id else False
+
+    @api.depends('partner_id')
+    def _compute_assigning(self):
+        for order in self:
+            if order.delivery_boy_id:
+                order.assigning = 'assigned'
+            else:
+                order.assigning = 'not_assigned'
+
+
+    def _compute_payment_method(self):
+        for order in self:
+            if order.sale_id:
+                order.payment_method = order.sale_id.payment_method
+
+
+
+
 
 class AssignDeliveryBoyWizard(models.TransientModel):
     _name = 'assign.delivery.boy.wizard'
     _description = 'Assign Delivery Boy Wizard'
 
     delivery_boy_id = fields.Many2one('stock.delivery.boy', string="Delivery Boy", required=True)
-    order_ids = fields.Many2many('stock.picking', string="Orders")
+    order_ids = fields.Many2many('stock.picking', string="Orders", default=lambda self: self._default_orders())
+
+    @api.model
+    def _default_orders(self):
+        """Get default orders from the context's active_ids."""
+        active_ids = self.env.context.get('active_ids', [])
+        return self.env['stock.picking'].browse(active_ids)
 
     def action_assign_delivery_boy(self):
+        """Assign the selected delivery boy to the selected orders."""
         for order in self.order_ids:
             order.delivery_boy_id = self.delivery_boy_id
+            order.button_validate()

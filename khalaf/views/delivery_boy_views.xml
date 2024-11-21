@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+
+    <!-- Inherit Form View to Modify it -->
+    <record id="boy_stock_picking" model="ir.ui.view">
+        <field name="name">boy.stock.picking.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='date_deadline']" position="after">
+                <field name="delivery_boy_id"/>
+                <field name="payment_method"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="partner_shipping_id"
+                       context="{'default_type':'delivery', 'show_address': 1, 'show_vat': False}"
+                       readonly="state == 'cancel' or 'done'"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="boy_stock_picking_tree" model="ir.ui.view">
+        <field name="name">boy.stock.picking.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="partner_shipping_id"
+                       context="{'default_type':'delivery', 'show_address': 1, 'show_vat': False}"
+                       readonly="state == 'cancel' or 'done'"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="delivery_boy_id"/>
+
+                <field name="assigning" optional="show" widget="badge" decoration-danger="assigning=='not_assigned'" decoration-info="assigning== 'assigned'" />
+
+
+            </xpath>
+
+        </field>
+    </record>
+
     <!-- Delivery Boy List View -->
     <record id="view_delivery_boy_tree" model="ir.ui.view">
         <field name="name">stock.delivery.boy.tree</field>
@@ -11,6 +54,8 @@
                 <field name="status"/>
                 <field name="total_cash"/>
                 <field name="total_visa"/>
+                <field name="total_insta"/>
+                <field name="total_voda"/>
                 <field name="total_amount"/>
             </tree>
         </field>
@@ -22,6 +67,11 @@
         <field name="model">stock.delivery.boy</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_process" type="object" string="Processing" class="btn btn-warning text-uppercase" invisible="status in ['in_progress','completed']"/>
+                    <button name="action_done" type="object" string="Done" class="btn-primary" invisible="status in ['pending','completed']"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,in_progress,completed"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -29,9 +79,14 @@
                         <field name="status"/>
                     </group>
                     <group string="Collections">
+
                         <field name="total_cash" readonly="1"/>
                         <field name="total_visa" readonly="1"/>
+                        <field name="total_insta" readonly="1"/>
+                        <field name="total_voda" readonly="1"/>
                         <field name="total_amount" readonly="1"/>
+
+
                     </group>
                     <notebook>
                         <page string="Delivery Orders">
@@ -39,8 +94,8 @@
                                 <tree>
                                     <field name="name"/>
                                     <field name="state"/>
-<!--                                    <field name="amount_total"/>-->
-<!--                                    <field name="payment_method"/>-->
+                                    <!--                                    <field name="amount_total"/>-->
+                                    <!--                                    <field name="payment_method"/>-->
                                 </tree>
                             </field>
                         </page>
@@ -57,6 +112,9 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_delivery_boy_root" name="Delivery Management" sequence="10"/>
-    <menuitem id="menu_delivery_boy" parent="menu_delivery_boy_root" name="Delivery Boys" action="action_delivery_boy" sequence="10"/>
+    <menuitem id="menu_delivery_boy_root" name="Delivery Boy" sequence="10" web_icon="khalaf,static/description/icon.png"/>
+    <menuitem id="menu_delivery_boy" parent="menu_delivery_boy_root" name="Delivery Boys" action="action_delivery_boy"
+              sequence="10"/>
+    <menuitem id="ready_orders" name="Ready Orders" action="stock.action_picking_tree_ready"
+              parent="menu_delivery_boy_root"/>
 </odoo>

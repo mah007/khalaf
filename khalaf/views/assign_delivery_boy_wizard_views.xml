@@ -18,11 +18,14 @@
         </field>
     </record>
 
-    <!-- Wizard Action -->
-    <record id="action_assign_delivery_boy_wizard" model="ir.actions.act_window">
-        <field name="name">Assign Delivery Boy</field>
-        <field name="res_model">assign.delivery.boy.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>
+
+    <record id="assign_delivery_boy" model="ir.actions.act_window">
+            <field name="name">Assign Delivery Boy</field>
+            <field name="res_model">assign.delivery.boy.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
 </odoo>
