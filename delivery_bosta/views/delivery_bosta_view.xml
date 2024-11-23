@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_delivery_form_view" model="ir.ui.view">
+        <field name="name">delivery.carrier.form</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Bosta Configuration"
+                      invisible="delivery_type != 'bosta'">
+                    <group>
+                        <field name="bosta_api_key" required="delivery_type == 'bosta'"/>
+                        <field name="bosta_api_url" required="delivery_type == 'bosta'"/>
+                        <field name="bosta_tracking_endpoint" required="delivery_type == 'bosta'"/>
+                        <field name="bosta_shipment_type" required="delivery_type == 'bosta'"/>
+                        <field name="bosta_delivery_note"/>
+
+                    </group>
+                    <field name="bosta_price">
+                        <tree editable="bottom">
+                            <field name="state"/>
+                            <field name="price"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="status_list_action">
+        <field name="name">Bosta Status</field>
+        <field name="res_model">bosta.status</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">List of Status that will no
+                longer be updated by cron job
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_bosta_status" name="Bosta Status"
+              action="status_list_action" parent="stock.menu_delivery"/>
+
+</odoo>

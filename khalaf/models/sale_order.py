@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
         ('insta', 'InstaPay'),
         ('voda', 'Vodafone'),
         ('visa', 'Visa')
-        ], string="Payment Method", help="Indicates if payment was made by cash , visa or any.")
+        ], string="Payment Method", help="Indicates if payment was made by cash , visa or any.",default='cash')
 
     collection_status = fields.Selection([('collected', 'Collected'),('not_collected', 'Not Collected')],default='not_collected', string="Collection Status")
 

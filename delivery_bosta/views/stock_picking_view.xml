@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_picking_view_form" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+            <!--            &lt;!&ndash;            TODO: not found field[@name='carrier_id']"&ndash;&gt;-->
+            <xpath expr="//field[@name='carrier_id']" position="after">
+                <label for="tracking_status"/>
+                <div name="tracking">
+                    <field name="tracking_status" class="oe_inline"
+                           readonly="True"/>
+                    <button type="object" class="fa fa-arrow-right oe_link"
+                            name="bosta_set_delivered"
+                            groups="delivery_bosta.group_bosta_status_write"
+                            string="Delivered?"
+                            invisible="delivery_type != 'bosta' or tracking_status in ['Returned to Shipper','Delivered','Order Cancelled'] or carrier_tracking_ref == False"/>
+                    <button type="object" class="fa fa-arrow-right oe_link"
+                            name="bosta_set_returned"
+                            groups="delivery_bosta.group_bosta_status_write"
+                            string="Returned?"
+                            invisible="delivery_type != 'bosta' or tracking_status in ['Returned to Shipper','Delivered','Order Cancelled'] or carrier_tracking_ref == False"/>
+
+                    <button type="object" class="fa fa-arrow-right oe_link"
+                            name="bosta_set_cancelled"
+                            groups="delivery_bosta.group_bosta_status_write"
+                            string="Order Cancelled?"
+                            invisible="delivery_type != 'bosta' or tracking_status in ['Returned to Shipper','Delivered','Order Cancelled'] or carrier_tracking_ref == False"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='carrier_id']" position="after">
+                <field name="bosta_awb" filename="bosta_awb_filename"/>
+                <field name="bosta_awb_filename" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="action_update_bosta_tracking_status" model="ir.actions.server">
+        <field name="name">Update Bosta Tracking</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="state">code</field>
+        <field name="code">records.update_bosta_tracking_status()</field>
+    </record>
+
+    <record id="stock_picking_view_form_delivery" model="ir.ui.view">
+        <field name="name">stock.picking.view.form.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id"
+               ref="stock_delivery.view_picking_withcarrier_out_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='send_to_shipper']"
+                   position="replace">
+                <button name="send_to_shipper" string="Send to Shipper"
+                        type="object"
+                        invisible="carrier_tracking_ref !=  False or delivery_type in ['fixed', 'base_on_rule'] or delivery_type == False or   picking_type_code ==  'incoming' or state in ('cancel') and picking_type_code != 'incoming' or  state not in ('done') "/>
+                <!--                        attrs="{'invisible':['|','|','|','|','|',('carrier_tracking_ref','!=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('sale_id','=',False),'&amp;',('picking_type_code','=','incoming'),('state','in',('cancel')),'&amp;',('picking_type_code','!=','incoming'),('state','not in',('done'))]}"/>-->
+
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>
