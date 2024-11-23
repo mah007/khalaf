@@ -1,4 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_bosta_wizard,access_bosta_wizard,model_bosta_wizard,base.group_user,1,1,1,1
-access_delivery_bosta_status,delivery_bosta.bosta_status,model_bosta_status,delivery_bosta.group_bosta_status,1,1,1,1
-access_delivery_bosta_price,delivery_bosta.bosta_price,model_bosta_price,delivery_bosta.group_bosta_status,1,1,1,1
