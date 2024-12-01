@@ -4,7 +4,7 @@
     <template id="report_stock_picking_receipt">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="picking">
-                <div style="width: 80mm; font-family: Arial, sans-serif; font-size: 12px; text-align: left;">
+                <div style="width: 80mm; font-family: 'Arial', 'Noto Sans Arabic', sans-serif; font-size: 12px; text-align: left; direction: ltr;">
                     <!-- Company Logo -->
                     <div style="text-align: center; margin-bottom: 10px;">
                         <img t-if="picking.company_id.logo"
