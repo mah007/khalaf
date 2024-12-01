@@ -33,6 +33,7 @@ class StockDeliveryBoy(models.Model):
             for order in rec.delivery_order_ids:
                 if order.sale_id:
                     order.sale_id.collection_status = 'collected'
+                    order.button_validate()
 
     def action_process(self):
         for rec in self:
@@ -141,6 +142,6 @@ class AssignDeliveryBoyWizard(models.TransientModel):
         # Assign the delivery boy record to each order
         for order in self.order_ids:
             order.delivery_boy_id = delivery_boy_record.id
-            order.button_validate()
+            # order.button_validate()
 
 

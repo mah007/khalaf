@@ -86,7 +86,7 @@
                     <group>
                         <field name="name"/>
                         <field name="employee_id"/>
-                        <field name="status"/>
+<!--                        <field name="status"/>-->
                     </group>
                     <group string="Collections">
 
