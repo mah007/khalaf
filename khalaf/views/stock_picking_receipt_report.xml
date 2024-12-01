@@ -37,7 +37,7 @@
                     </p>
                     <p>
                         <strong>Phone:</strong>
-                        <span t-field="picking.partner_id.phone or picking.partner_id.mobile"/>
+                        <span t-esc="picking.partner_id.phone or picking.partner_id.mobile or ''"/>
                     </p>
 
                     <!-- Items Table -->
