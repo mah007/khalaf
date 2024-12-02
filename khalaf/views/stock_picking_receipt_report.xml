@@ -6,6 +6,7 @@
     {'url': '/web/static/src/fonts/NotoSansArabic-Regular.ttf', 'family': 'NotoSansArabic'}
 ]"/>
         <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="picking">
                 <div style="width: 80mm; font-family: 'Arial', 'Noto Sans Arabic', sans-serif; font-size: 12px; text-align: left; direction: ltr;">
                     <!-- Company Logo -->
@@ -80,6 +81,7 @@
                         <span t-field="picking.payment_method"/>
                     </p>
                 </div>
+            </t>
             </t>
         </t>
     </template>
