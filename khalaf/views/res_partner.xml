@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="boy_res_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='user_ids']" position="after">
+
+                    <field name="mobile2" widget="phone"/>
+                    <field name="mobile3" widget="phone"/>
+                    <field name="mobile4" widget="phone"/>
+
+
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

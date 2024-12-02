@@ -27,6 +27,7 @@ This module enhances the operational efficiency of grocery delivery services, en
         'security/ir.model.access.csv',
         'views/stock_picking_receipt_report.xml',
         'views/delivery_boy_views.xml',
+        'views/res_partner.xml',
         'views/sale_order.xml',
         'views/hr_employee.xml',
         'views/assign_delivery_boy_wizard_views.xml',
