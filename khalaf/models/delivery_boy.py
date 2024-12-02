@@ -90,7 +90,11 @@ class StockPicking(models.Model):
     @api.depends('partner_id')
     def _compute_partner_shipping_id(self):
         for order in self:
-            order.partner_shipping_id = order.partner_id.address_get(['delivery'])['delivery'] if order.partner_id else False
+            if order.partner_id:
+                order.partner_shipping_id = order.partner_id.address_get(['delivery'])['delivery'] if order.partner_id else False
+            else:
+                order.partner_shipping_id = False
+
 
     @api.depends('partner_id')
     def _compute_assigning(self):
