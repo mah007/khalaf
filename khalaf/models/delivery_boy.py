@@ -81,8 +81,6 @@ class StockPicking(models.Model):
     partner_shipping_id = fields.Many2one(
         comodel_name='res.partner',
         string="Delivery Address info",
-        compute='_compute_partner_shipping_id',
-        store=True, readonly=False, required=True, precompute=True,
         check_company=True,
         index='btree_not_null')
     assigning = fields.Selection([('assigned', 'Assigned'), ('not_assigned', 'Not Assigned')], default='not_assigned', string="Is Assigned", compute='_compute_assigning', store=True)
