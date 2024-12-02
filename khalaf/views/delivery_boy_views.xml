@@ -124,10 +124,18 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <record id="action_ready_delivery_orders" model="ir.actions.act_window">
+    <field name="name">Ready Orders</field>
+    <field name="res_model">stock.picking</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('state', '=', 'assigned'), ('picking_type_id.code', '=', 'outgoing')]</field>
+    <field name="context">{}</field>
+</record>
+
     <menuitem id="menu_delivery_boy_root" name="Delivery Boy" sequence="10"
               web_icon="khalaf,static/description/icon.png"/>
     <menuitem id="menu_delivery_boy" parent="menu_delivery_boy_root" name="Delivery Boys" action="action_delivery_boy"
               sequence="10"/>
-    <menuitem id="ready_orders" name="Ready Orders" action="stock.action_picking_tree_ready"
+    <menuitem id="ready_orders" name="Ready Orders" action="khalaf.action_ready_delivery_orders"
               parent="menu_delivery_boy_root"/>
 </odoo>
