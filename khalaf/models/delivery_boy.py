@@ -22,10 +22,11 @@ class StockDeliveryBoy(models.Model):
         ('in_progress', 'In Progress'),
         ('completed', 'Completed')
     ], string='Status', default='pending', store=True)
-    total_cash = fields.Float(string="Total Cash Collection", compute='_compute_total_collection')
-    total_visa = fields.Float(string="Total Visa Collection", compute='_compute_total_collection')
-    total_insta = fields.Float(string="Total InstaPay Collection", compute='_compute_total_collection')
-    total_voda = fields.Float(string="Total Vodafone Collection", compute='_compute_total_collection')
+    total_cash = fields.Float(string="Cash", compute='_compute_total_collection')
+    total_visa = fields.Float(string="Visa", compute='_compute_total_collection')
+    total_insta = fields.Float(string="InstaPay", compute='_compute_total_collection')
+    total_voda = fields.Float(string="Vodafone", compute='_compute_total_collection')
+    total_flash = fields.Float(string="flash", compute='_compute_total_collection')
     total_amount = fields.Float(string="Total Amount", compute='_compute_total_collection')
 
     def done_collection(self):
@@ -61,11 +62,13 @@ class StockDeliveryBoy(models.Model):
             visa_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'visa')
             insta_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'insta')
             voda_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'voda')
+            flash_total = sum(order.sale_id.amount_total for order in record.delivery_order_ids if order.payment_method == 'flash')
             record.total_cash = cash_total
             record.total_visa = visa_total
             record.total_insta = insta_total
             record.total_voda = voda_total
-            record.total_amount = cash_total + visa_total + insta_total + voda_total
+            record.total_flash = flash_total
+            record.total_amount = cash_total + visa_total + insta_total + voda_total + flash_total
 
 
 class StockPicking(models.Model):
@@ -76,6 +79,7 @@ class StockPicking(models.Model):
         ('cash', 'Cash'),
         ('insta', 'InstaPay'),
         ('voda', 'Vodafone'),
+        ('flash', 'Flash'),
         ('visa', 'Visa')
     ], string="Payment Method", help="Indicates if payment was made by cash or visa.", compute='_compute_payment_method')
     partner_shipping_id = fields.Many2one(
