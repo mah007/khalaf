@@ -64,6 +64,7 @@
                 <field name="total_visa"/>
                 <field name="total_insta"/>
                 <field name="total_voda"/>
+                <field name="total_flash"/>
                 <field name="total_amount"/>
             </tree>
         </field>
@@ -94,6 +95,7 @@
                         <field name="total_visa" readonly="1"/>
                         <field name="total_insta" readonly="1"/>
                         <field name="total_voda" readonly="1"/>
+                        <field name="total_flash" readonly="1"/>
                         <field name="total_amount" readonly="1"/>
 
 
