@@ -75,7 +75,15 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     delivery_boy_id = fields.Many2one('stock.delivery.boy', string='Delivery Boy')
-    payment_status = fields.Char("Payment Status",_computer='_get_so_status')
+    payment_status = fields.Selection(
+        selection=[
+            ('upselling', "Upselling Opportunity"),
+            ('invoiced', "Fully Invoiced"),
+            ('to invoice', "To Invoice"),
+            ('no', "Nothing to Invoice"),
+        ],
+        string="Invoice Status",
+        compute='_get_so_status')
     payment_method = fields.Selection([
         ('cash', 'Cash'),
         ('insta', 'InstaPay'),
@@ -98,7 +106,7 @@ class StockPicking(models.Model):
             if state.sale_id:
                 state.payment_status = state.sale_id.invoice_status
             else:
-                state.payment_status = "not paid"
+                state.payment_status = "no"
 
     @api.depends('partner_id')
     def _compute_partner_shipping_id(self):
