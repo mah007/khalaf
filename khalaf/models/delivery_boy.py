@@ -97,6 +97,9 @@ class StockPicking(models.Model):
         for state in self:
             if state.sale_id:
                 state.payment_status = state.sale_id.invoice_status
+            else:
+                state.payment_status = "not paid"
+
 
 
 
