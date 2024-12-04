@@ -99,7 +99,10 @@ class StockPicking(models.Model):
     @api.depends('partner_id')
     def _compute_assigning(self):
         for order in self:
-            order.assigning = 'assigned' if order.delivery_boy_id else 'not_assigned'
+            if order.delivery_boy_id:
+                order.assigning = 'assigned'
+            else :
+                order.assigning ='not_assigned'
 
     # @api.depends('sale_id')
     def _compute_payment_method(self):
