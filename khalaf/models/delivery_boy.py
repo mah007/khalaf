@@ -75,7 +75,7 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     delivery_boy_id = fields.Many2one('stock.delivery.boy', string='Delivery Boy')
-    payment_status = fields.chart("Payment Status",_computer='_get_so_status')
+    payment_status = fields.char("Payment Status",_computer='_get_so_status')
     payment_method = fields.Selection([
         ('cash', 'Cash'),
         ('insta', 'InstaPay'),
