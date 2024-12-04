@@ -85,7 +85,7 @@ class StockPicking(models.Model):
         store=True, readonly=False, precompute=True,
         check_company=True,
         index='btree_not_null')
-    assigning = fields.Selection([('assigned', 'Assigned'), ('not_assigned', 'Not Assigned')], default='not_assigned', string="Is Assigned", compute='_compute_assigning', store=True)
+    assigning = fields.Selection([('assigned', 'Assigned'), ('not_assigned', 'Not Assigned')], default='not_assigned', string="Is Assigned", compute='_compute_assigning')
 
     @api.depends('partner_id')
     def _compute_partner_shipping_id(self):
