@@ -21,4 +21,6 @@ class SaleOrder(models.Model):
 
     collection_status = fields.Selection([('collected', 'Collected'),('not_collected', 'Not Collected')],default='not_collected', string="Collection Status")
 
+    delivery_boy_id = fields.Many2one('hr.employee', string="Delivery Boy")
+
 

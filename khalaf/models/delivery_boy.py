@@ -167,9 +167,12 @@ class AssignDeliveryBoyWizard(models.TransientModel):
             'status': 'in_progress',  # Default to in_progress status
         })
 
+
         # Assign the delivery boy record to each order
         for order in self.order_ids:
             order.delivery_boy_id = delivery_boy_record.id
+            if order.sale_id:
+                order.sale_id.delivery_boy_id = self.delivery_boy_id.id
             # order.button_validate()
 
 
