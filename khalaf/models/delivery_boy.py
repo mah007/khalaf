@@ -43,7 +43,7 @@ class StockDeliveryBoy(models.Model):
     def action_done(self):
         for rec in self:
             rec.status = 'completed'
-            rec.done_collection()
+            # rec.done_collection()
 
     @api.depends('delivery_order_ids.state')
     def _compute_status(self):
