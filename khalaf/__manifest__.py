@@ -22,7 +22,7 @@ This module enhances the operational efficiency of grocery delivery services, en
     'author': 'Mahmoud',
     'website': 'http://www.mah007.net',
     'category': 'Operations/Inventory',
-    'depends': ['stock', 'hr','sale'],
+    'depends': ['stock', 'hr', 'sale','pos_sale'],
     'data': [
         'security/ir.model.access.csv',
         'views/stock_picking_receipt_report.xml',
@@ -32,6 +32,13 @@ This module enhances the operational efficiency of grocery delivery services, en
         'views/hr_employee.xml',
         'views/assign_delivery_boy_wizard_views.xml',
     ],
+    'assets': {
+        'point_of_sale.assets': [
+            'khalaf/static/src/js/sale_order_fetcher.js',
+            'khalaf/static/src/xml/sale_order_list.xml',
+            'khalaf/static/src/xml/sale_order_row_ext.xml'
+        ],
+    },
     'installable': True,
     'application': True,
     'license': 'LGPL-3',

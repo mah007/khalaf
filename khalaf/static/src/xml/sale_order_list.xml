@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="pos_sale.SaleOrderList">
+        <xpath expr="//div[@class='header-row']" position="inside">
+            <div class="col assigned-to p-2">Assigned To</div>
+        </xpath>
+        <xpath expr="//SaleOrderRow" position="after">
+            <div class="col assigned-to p-2" t-esc="order.delivery_boy_id[1]" />
+        </xpath>
+    </t>
+</templates>

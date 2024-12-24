@@ -67,6 +67,13 @@
                             </tr>
                         </tbody>
                     </table>
+                    <!-- note -->
+
+                     <p t-if="picking.sale_id.note" style="margin-top: 15px; text-align: justify; font-style: italic;">
+                        <strong>Note:</strong>
+                        <span t-field="picking.sale_id.note"/>
+                    </p>
+
 
                     <!-- Total -->
                     <p style="margin-top: 10px; text-align: right;">

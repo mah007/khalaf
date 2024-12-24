@@ -18,6 +18,7 @@ class SaleOrder(models.Model):
         ('visa', 'Visa'),
         ('flash', 'Flash')
         ], string="Payment Method", help="Indicates if payment was made by cash , visa or any.",default='cash')
+    status_boy = fields.Char(string="Delivery boy status" ,readonly=True,default="pending")
 
     collection_status = fields.Selection([('collected', 'Collected'),('not_collected', 'Not Collected')],default='not_collected', string="Collection Status")
 

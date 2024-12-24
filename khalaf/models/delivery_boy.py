@@ -39,11 +39,17 @@ class StockDeliveryBoy(models.Model):
     def action_process(self):
         for rec in self:
             rec.status = 'in_progress'
+            for order in rec.delivery_order_ids:
+                if order.sale_id:
+                    order.sale_id.status_boy = self.status
 
     def action_done(self):
         for rec in self:
             rec.status = 'completed'
             # rec.done_collection()
+            for order in rec.delivery_order_ids:
+                if order.sale_id:
+                    order.sale_id.status_boy = self.status
 
     @api.depends('delivery_order_ids.state')
     def _compute_status(self):
