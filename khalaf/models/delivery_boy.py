@@ -8,6 +8,11 @@ class HREmployee(models.Model):
 
     delivery_boy = fields.Boolean(string="Is Delivery Boy", default=False)
 
+class HrEmployeePublic(models.Model):
+    _inherit = "hr.employee.public"
+
+    delivery_boy = fields.Boolean(string="Is Delivery Boy", default=False)
+
 
 class StockDeliveryBoy(models.Model):
     _name = 'stock.delivery.boy'
