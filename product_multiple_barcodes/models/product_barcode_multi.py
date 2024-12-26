@@ -12,6 +12,9 @@ class ProductBarcodeMulti(models.Model):
         'Barcode',
         required=True,
     )
+    _sql_constraints = [
+        ('unique_name_email', 'unique(name)', 'The combination of Barcode must be unique!'),
+    ]
 
     product_id = fields.Many2one(
         'product.product', 
